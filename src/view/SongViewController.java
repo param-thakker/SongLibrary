@@ -29,26 +29,26 @@ public class SongViewController {
 	Map<String,List<String>> map=new HashMap<>();
 	
 
-	public void start(Stage mainStage) throws IOException {                
-		// create an ObservableList 
-		// from an ArrayList 
+	public void start(Stage mainStage) throws IOException {                 
 		List<String> list=new ArrayList<>();
 		
 		File file = new File("songs.txt"); 
 		Scanner sc = new Scanner(file); 
 		    
 		    while (sc.hasNextLine()) { 
+
 		    	String item=sc.nextLine().trim();
 		    	String[] content=item.split("\\|",4);
 		        list.add(content[0].trim()+ "|" + content[1].trim());
 		        map.put(content[0].trim()+ "|" + content[1].trim(), new ArrayList<>(Arrays.asList(content[2].trim(),content[3].trim())));
 		      
+
 		    }
 		
 		Collections.sort(list,new sortSongs());
 		
 			  
-			   
+		System.out.println(list);
 		
 		obsList = FXCollections.observableArrayList(list); 
 
@@ -72,6 +72,7 @@ public class SongViewController {
 		alert.initOwner(mainStage);
 		alert.setTitle("Song List");
 		alert.setHeaderText(
+
 				"Selected song details");
 		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",3);
 		List<String> songDets=map.get(listView.getSelectionModel().getSelectedItem());
@@ -86,10 +87,10 @@ public class SongViewController {
 	}
 	
 	private void showItemInputDialog(Stage mainStage) {                
-		String item = listView.getSelectionModel().getSelectedItem();
+		String song = listView.getSelectionModel().getSelectedItem();
 		int index = listView.getSelectionModel().getSelectedIndex();
 
-		TextInputDialog dialog = new TextInputDialog(item);
+		TextInputDialog dialog = new TextInputDialog(song);
 		dialog.initOwner(mainStage); dialog.setTitle("List Item");
 		dialog.setHeaderText("Selected Item (Index: " + index + ")");
 		dialog.setContentText("Enter name: ");
@@ -101,15 +102,17 @@ public class SongViewController {
 	{ 
 	    public int compare(String a, String b) 
 	    { 
+
 	       String[] aDivide=a.split("|",4);
 	       String[] bDivide=b.split("|",4);
-	       String firstSong=aDivide[0].toLowerCase();
-	       String secondSong=bDivide[0].toLowerCase();
+
+	       String firstSong=aDivide[0].toUpperCase();
+	       String secondSong=bDivide[0].toUpperCase();
 	       int cmp=firstSong.compareTo(secondSong);
 	       if (cmp!=0) {
 	    	   return cmp;
 	       }
-	       return aDivide[1].toLowerCase().compareTo(bDivide[1].toLowerCase());
+	       return aDivide[1].toUpperCase().compareTo(bDivide[1].toUpperCase());
 	       
 	    } 
 	} 
