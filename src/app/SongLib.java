@@ -1,16 +1,35 @@
 package app;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import view.SongViewController;
 
 public class SongLib extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
+		FXMLLoader loader = new FXMLLoader();   
+		loader.setLocation(
+				getClass().getResource("/view/songlist.fxml"));
+		AnchorPane root = (AnchorPane)loader.load();
+
+		SongViewController listController = 
+				loader.getController();
+		listController.start(primaryStage);
+
+		Scene scene = new Scene(root, 400, 300);
+		primaryStage.setScene(scene);
+		primaryStage.show(); 
 
 	}
-	@Override
-	public void start(Stage primaryStage) throws Exception{
-		
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		launch(args);
+
 	}
 
 }
