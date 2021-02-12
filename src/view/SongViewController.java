@@ -31,31 +31,21 @@ public class SongViewController {
 		// from an ArrayList 
 		List<String> list=new ArrayList<>();
 		
-		File file = new File("/Users/param/new eclipse-workspace/SongLibrary/songs.txt"); 
+		File file = new File("songs.txt"); 
 		Scanner sc = new Scanner(file); 
 		    
 		    while (sc.hasNextLine()) { 
-		      list.add(sc.nextLine().trim());
+		    	String nextSong = sc.nextLine().trim();
+		    	System.out.println("adding song " + nextSong);
+		    	list.add(nextSong);
 		    }
 		
 		Collections.sort(list,new sortSongs());
 		
 			  
-			   
+		System.out.println(list);
 		
-		obsList = FXCollections.observableArrayList(list); /*"Blinding Lights| The Weeknd",                               
-				"Night Changes| One direction","Feel So Close| Calvin Harris",
-				"Perfect| Ed Sheeran",
-				"Save Your Tears| The Weeknd",
-				"Rockstar | Post Malone",
-				"Radioactive| Imagine Dragons",
-				"My life would suck without you| Kelly Clarkson",
-				"Whatever it takes|Imagine Dragons",
-				"Beautiful People|Ed Sheeran",
-				"Wildest Dreams|Taylor Swift",
-				"I know|Post Malone",
-				"Hollywood's Bleeding|Post Malone",
-				"Sorry|Justin Bieber"*/
+		obsList = FXCollections.observableArrayList(list); 
 
 		listView.setItems(obsList); 
 
@@ -79,22 +69,18 @@ public class SongViewController {
 		alert.setHeaderText(
 				"Selected list item properties");
 
-		String content = "Index: " + 
-				listView.getSelectionModel()
-		.getSelectedIndex() + 
-		"\nValue: " + 
-		listView.getSelectionModel()
-		.getSelectedItem();
+		String content = "Index: " + listView.getSelectionModel().getSelectedIndex() + 
+				"\nValue: " + listView.getSelectionModel().getSelectedItem();
 
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
 	
 	private void showItemInputDialog(Stage mainStage) {                
-		String item = listView.getSelectionModel().getSelectedItem();
+		String song = listView.getSelectionModel().getSelectedItem();
 		int index = listView.getSelectionModel().getSelectedIndex();
 
-		TextInputDialog dialog = new TextInputDialog(item);
+		TextInputDialog dialog = new TextInputDialog(song);
 		dialog.initOwner(mainStage); dialog.setTitle("List Item");
 		dialog.setHeaderText("Selected Item (Index: " + index + ")");
 		dialog.setContentText("Enter name: ");
@@ -108,8 +94,8 @@ public class SongViewController {
 	    { 
 	       String[] aDivide=a.split("|",2);
 	       String[] bDivide=b.split("|",2);
-	       String firstSong=aDivide[0];
-	       String secondSong=bDivide[0];
+	       String firstSong=aDivide[0].toLowerCase();
+	       String secondSong=bDivide[0].toLowerCase();
 	       int cmp=firstSong.compareTo(secondSong);
 	       if (cmp!=0) {
 	    	   return cmp;
