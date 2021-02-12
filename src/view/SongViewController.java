@@ -1,16 +1,17 @@
 package view;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,18 +25,24 @@ public class SongViewController {
 	@FXML         
 	ListView<String> listView;                
 
-	private ObservableList<String> obsList;              
+	private ObservableList<String> obsList;  
+	Map<String,List<String>> map=new HashMap<>();
+	
 
 	public void start(Stage mainStage) throws IOException {                
 		// create an ObservableList 
 		// from an ArrayList 
 		List<String> list=new ArrayList<>();
 		
-		File file = new File("/Users/param/new eclipse-workspace/SongLibrary/songs.txt"); 
+		File file = new File("songs.txt"); 
 		Scanner sc = new Scanner(file); 
 		    
 		    while (sc.hasNextLine()) { 
-		      list.add(sc.nextLine().trim());
+		    	String item=sc.nextLine().trim();
+		    	String[] content=item.split("\\|",4);
+		        list.add(content[0].trim()+ "|" + content[1].trim());
+		        map.put(content[0].trim()+ "|" + content[1].trim(), new ArrayList<>(Arrays.asList(content[2].trim(),content[3].trim())));
+		      
 		    }
 		
 		Collections.sort(list,new sortSongs());
@@ -43,19 +50,7 @@ public class SongViewController {
 			  
 			   
 		
-		obsList = FXCollections.observableArrayList(list); /*"Blinding Lights| The Weeknd",                               
-				"Night Changes| One direction","Feel So Close| Calvin Harris",
-				"Perfect| Ed Sheeran",
-				"Save Your Tears| The Weeknd",
-				"Rockstar | Post Malone",
-				"Radioactive| Imagine Dragons",
-				"My life would suck without you| Kelly Clarkson",
-				"Whatever it takes|Imagine Dragons",
-				"Beautiful People|Ed Sheeran",
-				"Wildest Dreams|Taylor Swift",
-				"I know|Post Malone",
-				"Hollywood's Bleeding|Post Malone",
-				"Sorry|Justin Bieber"*/
+		obsList = FXCollections.observableArrayList(list); 
 
 		listView.setItems(obsList); 
 
@@ -68,23 +63,23 @@ public class SongViewController {
 		.selectedIndexProperty()
 		.addListener(
 				(obs, oldVal, newVal) -> 
-				showItemInputDialog(mainStage));
+				songDetail(mainStage));
 
 	}
 	
 	private void songDetail(Stage mainStage) {                
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.initOwner(mainStage);
-		alert.setTitle("Song Details");
+		alert.setTitle("Song List");
 		alert.setHeaderText(
-				"Selected list item properties");
-
-		String content = "Index: " + 
-				listView.getSelectionModel()
-		.getSelectedIndex() + 
-		"\nValue: " + 
-		listView.getSelectionModel()
-		.getSelectedItem();
+				"Selected song details");
+		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",3);
+		List<String> songDets=map.get(listView.getSelectionModel().getSelectedItem());
+		String album=songDets.get(0);
+		String year=songDets.get(1);
+				
+		
+		String content = "Name: " + song[0] + "\nArtist: " + song[1] + "\nAlbum: " + album + "\nYear: " + year;
 
 		alert.setContentText(content);
 		alert.showAndWait();
@@ -106,15 +101,15 @@ public class SongViewController {
 	{ 
 	    public int compare(String a, String b) 
 	    { 
-	       String[] aDivide=a.split("|",2);
-	       String[] bDivide=b.split("|",2);
-	       String firstSong=aDivide[0];
-	       String secondSong=bDivide[0];
+	       String[] aDivide=a.split("|",4);
+	       String[] bDivide=b.split("|",4);
+	       String firstSong=aDivide[0].toLowerCase();
+	       String secondSong=bDivide[0].toLowerCase();
 	       int cmp=firstSong.compareTo(secondSong);
 	       if (cmp!=0) {
 	    	   return cmp;
 	       }
-	       return aDivide[1].compareTo(bDivide[1]);
+	       return aDivide[1].toLowerCase().compareTo(bDivide[1].toLowerCase());
 	       
 	    } 
 	} 

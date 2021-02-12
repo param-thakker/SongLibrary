@@ -10,7 +10,6 @@ public class SongLib extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
 		FXMLLoader loader = new FXMLLoader();   
 		loader.setLocation(
 				getClass().getResource("/view/songlist.fxml"));
@@ -27,7 +26,6 @@ public class SongLib extends Application {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		launch(args);
 
 	}

@@ -1,15 +1,15 @@
-Blinding Lights|The Weeknd                              
-Night Changes|One direction
-Feel So Close|Calvin Harris
-Perfect|Ed Sheeran
-Save Your Tears|The Weeknd
-Rockstar |Post Malone
-Radioactive|Imagine Dragons
-My life would suck without you|Kelly Clarkson
-Whatever it takes|Imagine Dragons
-Beautiful People|Ed Sheeran
-Wildest Dreams|Taylor Swift
-I know|Post Malone
-Hollywood's Bleeding|Post Malone
-Sorry|Justin Bieber
-Blinding Lights|Weeknd
+Blinding Lights|The Weeknd|fwr|32                          
+Night Changes|One direction|43|542
+Feel So Close|Calvin Harris|fs|32
+Perfect|Ed Sheeran|dgh|32
+Save Your Tears|The Weeknd|gdgh6|565
+Rockstar|Post Malone|ergd|w43
+Radioactive|Imagine Dragons|ere|5543
+My life would suck without you|Kelly Clarkson|gdf|34356
+Whatever it takes|Imagine Dragons|gdrg|5563
+Beautiful People|Ed Sheeran|hrhr|245
+Wildest Dreams|Taylor Swift|ger|7785
+I know|Post Malone|dgd|686
+Hollywood's Bleeding|Post Malone|jtyrtj|7564
+Sorry|Justin Bieber|hdthe|646
+Blinding Lights|Weeknd|jrjr|885
