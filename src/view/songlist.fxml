@@ -11,7 +11,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="view.SongViewController" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+	fx:controller="view.SongViewController" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
          <children>
             <ListView id="listView" layoutX="14.0" layoutY="44.0" prefHeight="320.0" prefWidth="294.0" />
             <Button id="add" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Add Song" />
@@ -25,4 +25,5 @@
             <Label layoutX="427.0" layoutY="18.0" prefHeight="18.0" prefWidth="139.0" text="Current Song Info" wrapText="true" />
          </children>
 </AnchorPane>
+
 
