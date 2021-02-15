@@ -15,10 +15,15 @@ import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class SongViewController {
@@ -36,20 +41,16 @@ public class SongViewController {
 		Scanner sc = new Scanner(file); 
 		    
 		    while (sc.hasNextLine()) { 
-
 		    	String item=sc.nextLine().trim();
 		    	String[] content=item.split("\\|",4);
 		        list.add(content[0].trim()+ "|" + content[1].trim());
 		        map.put(content[0].trim()+ "|" + content[1].trim(), new ArrayList<>(Arrays.asList(content[2].trim(),content[3].trim())));
-		      
-
 		    }
 		
 		Collections.sort(list,new sortSongs());
-		
-			  
-		System.out.println(list);
-		
+		for (int i=0;i<list.size();i++) {
+			System.out.println(list.get(i));
+		}
 		obsList = FXCollections.observableArrayList(list); 
 
 		listView.setItems(obsList); 
@@ -73,7 +74,7 @@ public class SongViewController {
 		alert.setTitle("Song List");
 		alert.setHeaderText(
 
-				"Selected song details");
+			"Selected song details");
 		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",3);
 		List<String> songDets=map.get(listView.getSelectionModel().getSelectedItem());
 		String album=songDets.get(0);
@@ -103,16 +104,17 @@ public class SongViewController {
 	    public int compare(String a, String b) 
 	    { 
 
-	       String[] aDivide=a.split("|",4);
-	       String[] bDivide=b.split("|",4);
+	       String[] aDivide=a.split("|",2);
+	       String[] bDivide=b.split("|",2);
 
-	       String firstSong=aDivide[0].toUpperCase();
-	       String secondSong=bDivide[0].toUpperCase();
-	       int cmp=firstSong.compareTo(secondSong);
+	       String firstSong=aDivide[0].trim();
+	       String secondSong=bDivide[0].trim();
+	       int cmp=firstSong.compareToIgnoreCase(secondSong);
 	       if (cmp!=0) {
 	    	   return cmp;
 	       }
-	       return aDivide[1].toUpperCase().compareTo(bDivide[1].toUpperCase());
+	       return aDivide[1].trim().compareToIgnoreCase(bDivide[1].trim());
+	     
 	       
 	    } 
 	} 

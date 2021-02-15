@@ -2,11 +2,15 @@ package app;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import view.SongViewController;
 
 public class SongLib extends Application {
+
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
