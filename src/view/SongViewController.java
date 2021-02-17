@@ -19,17 +19,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
+
 
 public class SongViewController {
 	@FXML         
-	ListView<String> listView;                
-
+	ListView<String> listView;             
+	@FXML
+	Button add;
+	@FXML
+	Button del;
+	@FXML
+	TextArea dets;
+	
 	private ObservableList<String> obsList;  
 	Map<String,List<String>> map=new HashMap<>();
 	
@@ -68,23 +76,32 @@ public class SongViewController {
 
 	}
 	
-	private void songDetail(Stage mainStage) {                
-		Alert alert = new Alert(AlertType.INFORMATION);
+	private void songDetail(Stage mainStage) { 
+		
+		/*Alert alert = new Alert(AlertType.INFORMATION);
 		alert.initOwner(mainStage);
 		alert.setTitle("Song List");
 		alert.setHeaderText(
 
-			"Selected song details");
+			"Selected song details");*/
 		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",3);
 		List<String> songDets=map.get(listView.getSelectionModel().getSelectedItem());
 		String album=songDets.get(0);
 		String year=songDets.get(1);
 				
-		
-		String content = "Name: " + song[0] + "\nArtist: " + song[1] + "\nAlbum: " + album + "\nYear: " + year;
+		dets.setText("Selected song details: \n" +
+				"Name: " + song[0] + "\nArtist: " + song[1] + "\nAlbum: " + album + "\nYear: " + year);
+		/*String content = "Name: " + song[0] + "\nArtist: " + song[1] + "\nAlbum: " + album + "\nYear: " + year;
 
 		alert.setContentText(content);
-		alert.showAndWait();
+		alert.showAndWait();*/
+	}
+	public void addSong(ActionEvent e) {
+		Button b = (Button) e.getSource();
+		System.out.println("Button b's source is "+ e.getSource().toString());
+	}
+	public void deleteSong(ActionEvent e) {
+		
 	}
 	
 	private void showItemInputDialog(Stage mainStage) {                
