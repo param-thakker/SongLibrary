@@ -2,6 +2,7 @@ package view;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,20 +62,25 @@ public class SongViewController {
 	private ObservableList<String> obsList;  
 	Map<String,List<String>> map=new HashMap<>();
 	List<String> list=new ArrayList<>();
-	
-
 	public void start(Stage mainStage) throws IOException {                 
 		
 		
 		File file = new File("songs.txt"); 
 		Scanner sc = new Scanner(file); 
-		    
+		    if (!sc.hasNextLine()) {
+		    	System.out.println("Empty file");
+		    	return;
+		    }
 		    while (sc.hasNextLine()) { 
 		    	String item=sc.nextLine().trim();
+		    	if (item.equals("")) {
+		    		continue;
+		    	}
 		    	String[] content=item.split("\\|",4);
 		        list.add(content[0].trim()+ "|" + content[1].trim());
 		        map.put(content[0].trim()+ "|" + content[1].trim(), new ArrayList<>(Arrays.asList(content[2].trim(),content[3].trim())));
 		    }
+		  
 		
 		Collections.sort(list,new sortSongs());
 		
@@ -144,8 +150,8 @@ public class SongViewController {
 		edit.setDisable(true);
 		cancelAdd.setVisible(true);
 	}
-	public void saveAdd(ActionEvent e) {
-		Alert alert = new Alert(AlertType.CONFIRMATION, "Save changes?\n Name"
+	public void saveAdd(ActionEvent e) throws IOException {
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Save changes?\nName:"
 															+ nameDet.getText() +
 															"\nArtist: " + artistDet.getText() +
 															"\nAlbum: " + albumDet.getText() +
@@ -167,14 +173,14 @@ public class SongViewController {
 		if (alert.getResult() == ButtonType.YES) {
 			
 			String errMsg = "";
-			if (nameDet.getText().equals("") || artistDet.getText() == "") {
-				if (nameDet.getText().equals("")) { errMsg+= "NAME cannot be empty!"; }
-				if (artistDet.getText().equals("")) {errMsg+= "\nARTIST cannot be empty!";}
+			
+				if (nameDet.getText().equals("") || (artistDet.getText().equals(""))) {
+				errMsg+= "NAME OR ARTIST CANNOT BE EMPTY!"; 
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
-				
-			}else {
+				}		
+			else {
 				String item = nameDet.getText() + " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText();
 		    	String[] content=item.split("\\|",4);
 		        list.add(content[0].trim()+ "|" + content[1].trim());
@@ -182,25 +188,47 @@ public class SongViewController {
 		        
 		        Collections.sort(list, new sortSongs());
 		        obsList = FXCollections.observableArrayList(list); 
-				listView.setItems(obsList); 
+				listView.setItems(obsList);
+				FileWriter fw = new FileWriter("songs.txt", true);
+	            fw.write("\n" + item);
+	            fw.close();
+				
 			}
 		}
 		cancelAdd.setVisible(false);
 		saveAdd.setVisible(false);
 		rTitle.setText("Song Details");
 	}
-	public void deleteSong(ActionEvent e) {
+	public void deleteSong(ActionEvent e) throws IOException {
 		if (listView.getSelectionModel().getSelectedItem() != null) {
+			String itemToBeRemoved=listView.getSelectionModel().getSelectedItem();
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Delete " + listView.getSelectionModel().getSelectedItem() + " ?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 			alert.showAndWait();
-			
+			File file = new File("songs.txt"); 
+			Scanner sc = new Scanner(file); 
+			String contentOfFile="";
+
 			int currIndex = listView.getSelectionModel().getSelectedIndex();
 			if (alert.getResult() == ButtonType.YES) {
 				listView.getItems().remove(currIndex);
 				list.remove(currIndex);
-				//removing map remove atm because it causes weird bugs in songDetails for whatever reason but app seems to work fine without it
-				//map.remove(listView.getSelectionModel().getSelectedItem()); 
-				
+				while (sc.hasNextLine()) {
+			    	String original=sc.nextLine();
+			    	String item=original.trim();
+			    	if (item.equals("")) {
+			    		continue;
+			    	}
+			    	String[] content=item.split("\\|",4);
+			    	if ((content[0].trim()+ "|" + content[1].trim()).equals(itemToBeRemoved)){
+			    		contentOfFile+="\n";
+			    	}
+			    	else {
+			    		contentOfFile+=original + "\n";
+			    	}
+				}			
+				FileWriter fw = new FileWriter("songs.txt");
+				fw.write(contentOfFile);
+				fw.close();	
 			}
 			
 			if (!listView.getSelectionModel().isEmpty()) { //if not empty make a selection
@@ -236,14 +264,10 @@ public class SongViewController {
 		del.setDisable(true);
 		add.setDisable(true);
 		cancelEdit.setVisible(true);
-		System.out.println("Current Song details are: \n Name"
-							+ nameDet.getText() +
-							"\nArtist: " + artistDet.getText() +
-							"\nAlbum: " + albumDet.getText() +
-							"\nYear: " + yearDet.getText());
 	}
 	public void saveSong(ActionEvent e) {
-		Alert alert = new Alert(AlertType.CONFIRMATION, "Save changes?\nSong Name: "
+		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",2);
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Save changes?" + "\nName: "
 															+ nameDet.getText() +
 															"\nArtist: " + artistDet.getText() +
 															"\nAlbum: " + albumDet.getText() +
@@ -262,36 +286,23 @@ public class SongViewController {
 		if (alert.getResult() == ButtonType.YES) {
 			
 			String errMsg = "";
-			if (nameDet.getText().equals("") || artistDet.getText() == "") {
-				if (nameDet.getText().equals("")) { errMsg+= "NAME cannot be empty!"; }
-				if (artistDet.getText().equals("")) {errMsg+= "\nARTIST cannot be empty!";}
+			
+				if (nameDet.getText().equals("") || (artistDet.getText().equals(""))) { 
+				errMsg+= "NAME OR ARTIST CANNOT BE EMPTY!";
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
-				
-			}else {
-				String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",3);
-				List<String> songDets=map.get(listView.getSelectionModel().getSelectedItem());
+				}
+			else {
+			
+				map.remove(song[0]+ "|" + song[1]);
+				map.put(nameDet.getText()+"|" + artistDet.getText(), new ArrayList<>(Arrays.asList(albumDet.getText(),yearDet.getText())));
 				int index = listView.getSelectionModel().getSelectedIndex();
-				
-				
-				//there's an NullPointerException when you try to change the song name or artist, but not when you change the album or year
-				//i think it has to do with the fact that its physically changing the keys 
-				song[0] = nameDet.getText();
-				System.out.println("new song name is " + song[0]);
-				song[1] = artistDet.getText();
-				System.out.println("new song artist is " + song[1]);
-				songDets.set(0, albumDet.getText());
-				System.out.println("new song album is " + songDets.get(0));
-				songDets.set(1, yearDet.getText());
-				System.out.println("new song year is " + songDets.get(1));
-				
-				obsList.set(index, song[0] + "|" + song[1]);
+				obsList.set(index, nameDet.getText()+"|" + artistDet.getText());
 			}
 			save.setVisible(false);
 			cancelEdit.setVisible(false);
 		}
-		
 	}
 	public void cancel(ActionEvent e) {
 		nameDet.setEditable(false);
@@ -325,9 +336,7 @@ public class SongViewController {
 	       if (cmp!=0) {
 	    	   return cmp;
 	       }
-	       return aDivide[1].trim().compareToIgnoreCase(bDivide[1].trim());
-	     
-	       
+	       return aDivide[1].trim().compareToIgnoreCase(bDivide[1].trim()); 
 	    } 
 	} 
 	  
