@@ -265,7 +265,7 @@ public class SongViewController {
 		add.setDisable(true);
 		cancelEdit.setVisible(true);
 	}
-	public void saveSong(ActionEvent e) {
+	public void saveSong(ActionEvent e) throws IOException {
 		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",2);
 		Alert alert = new Alert(AlertType.CONFIRMATION, "Save changes?" + "\nName: "
 															+ nameDet.getText() +
@@ -299,6 +299,28 @@ public class SongViewController {
 				map.put(nameDet.getText()+"|" + artistDet.getText(), new ArrayList<>(Arrays.asList(albumDet.getText(),yearDet.getText())));
 				int index = listView.getSelectionModel().getSelectedIndex();
 				obsList.set(index, nameDet.getText()+"|" + artistDet.getText());
+				File file = new File("songs.txt"); 
+				Scanner sc = new Scanner(file); 
+				String contentOfFile="";
+					while (sc.hasNextLine()) {
+				    	String original=sc.nextLine();
+				    	String item=original.trim();
+				    	if (item.equals("")) {
+				    		continue;
+				    	}
+				    	String[] content=item.split("\\|",4);
+				    	if ((content[0].trim()+ "|" + content[1].trim()).equals(song[0]+ "|" + song[1])){
+				    		contentOfFile+=nameDet.getText()+ " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText() +"\n";
+				    	}
+				    	else {
+				    		contentOfFile+=original + "\n";
+				    	}
+					}		
+					
+					FileWriter fw = new FileWriter("songs.txt");
+					fw.write(contentOfFile);
+					fw.close();	
+				
 			}
 			save.setVisible(false);
 			cancelEdit.setVisible(false);
