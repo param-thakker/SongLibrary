@@ -1,3 +1,4 @@
+//NAMES: Param Thakker( ), Jonathan Lu (jnl76)
 package app;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -34,4 +35,3 @@ public class SongLib extends Application {
 	}
 
 }
-
