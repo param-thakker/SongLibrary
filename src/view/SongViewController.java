@@ -1,7 +1,6 @@
+//NAMES: Param Thakker( ), Jonathan Lu (jnl76)
 package view;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,24 +10,18 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
 
 
 public class SongViewController {
@@ -173,13 +166,19 @@ public class SongViewController {
 		if (alert.getResult() == ButtonType.YES) {
 			
 			String errMsg = "";
-			
-				if (nameDet.getText().equals("") || (artistDet.getText().equals(""))) {
+			//check empty
+			if (nameDet.getText().equals("") || (artistDet.getText().equals(""))) {
 				errMsg+= "NAME OR ARTIST CANNOT BE EMPTY!"; 
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
-				}		
+			}//check duplicates
+			else if (map.containsKey(nameDet.getText().trim() + "|" + artistDet.getText().trim())) {
+				errMsg+= nameDet.getText() + " by " + artistDet.getText() + " is already in the library! ";
+				Alert dupAdd = new Alert(AlertType.ERROR);
+				dupAdd.setHeaderText(errMsg);
+				dupAdd.showAndWait();
+			}//add new song
 			else {
 				String item = nameDet.getText() + " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText();
 		    	String[] content=item.split("\\|",4);
@@ -286,13 +285,19 @@ public class SongViewController {
 		if (alert.getResult() == ButtonType.YES) {
 			
 			String errMsg = "";
-			
-				if (nameDet.getText().equals("") || (artistDet.getText().equals(""))) { 
+			//check empty
+			if (nameDet.getText().equals("") || (artistDet.getText().equals(""))) { 
 				errMsg+= "NAME OR ARTIST CANNOT BE EMPTY!";
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
-				}
+			}//check duplicates
+			else if (map.containsKey(nameDet.getText().trim() + "|" + artistDet.getText().trim())) {
+				errMsg+= nameDet.getText() + " by " + artistDet.getText() + " is already in the library! ";
+				Alert dupAdd = new Alert(AlertType.ERROR);
+				dupAdd.setHeaderText(errMsg);
+				dupAdd.showAndWait();
+			}//edit success
 			else {
 				list.clear();
 				map.remove(song[0]+ "|" + song[1]);
