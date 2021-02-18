@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
 
+
 public class SongViewController {
 	@FXML         
 	ListView<String> listView;             
@@ -178,6 +179,12 @@ public class SongViewController {
 				Alert dupAdd = new Alert(AlertType.ERROR);
 				dupAdd.setHeaderText(errMsg);
 				dupAdd.showAndWait();
+			}//year isn't a positive integer
+			else if (!yearDet.getText().equals("") &&  (!isInteger(yearDet.getText()) || Integer.valueOf(yearDet.getText())<=0)) {
+				errMsg += yearDet.getText() + " is not a valid YEAR!";
+				Alert badYear = new Alert(AlertType.ERROR);
+				badYear.setHeaderText(errMsg);
+				badYear.showAndWait();
 			}//add new song
 			else {
 				String item = nameDet.getText() + " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText();
@@ -282,6 +289,7 @@ public class SongViewController {
 		listView.setFocusTraversable(true);
 		del.setDisable(false);
 		add.setDisable(false);
+		
 		if (alert.getResult() == ButtonType.YES) {
 			
 			String errMsg = "";
@@ -291,6 +299,13 @@ public class SongViewController {
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
+				
+			}//year isn't a positive integer
+			else if (!yearDet.getText().equals("") &&  (!isInteger(yearDet.getText()) || Integer.valueOf(yearDet.getText())<=0)) {
+				errMsg += yearDet.getText() + " is not a valid YEAR!";
+				Alert badYear = new Alert(AlertType.ERROR);
+				badYear.setHeaderText(errMsg);
+				badYear.showAndWait();
 			}//check duplicates
 			else if (map.containsKey(nameDet.getText().trim() + "|" + artistDet.getText().trim())) {
 				errMsg+= nameDet.getText() + " by " + artistDet.getText() + " is already in the library! ";
@@ -375,5 +390,14 @@ public class SongViewController {
 	       return aDivide[1].trim().compareToIgnoreCase(bDivide[1].trim()); 
 	    } 
 	} 
+	public static boolean isInteger(String s) {  
+	    try { 
+	        Integer.parseInt(s); 
+	        return true; 
+	    } 
+	    catch (Exception e){  
+	        return false; 
+	    } 
+	}
 	  
 }
