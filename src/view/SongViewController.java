@@ -294,7 +294,7 @@ public class SongViewController {
 				badAdd.showAndWait();
 				}
 			else {
-			
+				list.clear();
 				map.remove(song[0]+ "|" + song[1]);
 				map.put(nameDet.getText()+"|" + artistDet.getText(), new ArrayList<>(Arrays.asList(albumDet.getText(),yearDet.getText())));
 				int index = listView.getSelectionModel().getSelectedIndex();
@@ -311,9 +311,11 @@ public class SongViewController {
 				    	String[] content=item.split("\\|",4);
 				    	if ((content[0].trim()+ "|" + content[1].trim()).equals(song[0]+ "|" + song[1])){
 				    		contentOfFile+=nameDet.getText()+ " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText() +"\n";
+				    		list.add(nameDet.getText()+ "|" + artistDet.getText());
 				    	}
 				    	else {
 				    		contentOfFile+=original + "\n";
+				    		list.add(content[0].trim()+ "|" + content[1].trim());
 				    	}
 					}		
 					
@@ -321,6 +323,13 @@ public class SongViewController {
 					fw.write(contentOfFile);
 					fw.close();	
 				
+					
+					Collections.sort(list,new sortSongs());
+					
+					obsList = FXCollections.observableArrayList(list); 
+
+					listView.setItems(obsList); 
+					
 			}
 			save.setVisible(false);
 			cancelEdit.setVisible(false);
