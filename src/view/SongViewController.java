@@ -1,4 +1,4 @@
-//NAMES: Param Thakker( ), Jonathan Lu (jnl76)
+//NAMES: Param Thakker(pkt15), Jonathan Lu (jnl76)
 package view;
 import java.io.File;
 import java.io.FileWriter;
@@ -52,6 +52,9 @@ public class SongViewController {
 	TextField yearDet;
 	@FXML
 	TextField rTitle;
+	//for edit duplicate check purposes
+	String ogName = "";
+	String ogArtist = "";
 	
 	private ObservableList<String> obsList;  
 	Map<String,List<String>> map=new HashMap<>();
@@ -179,12 +182,14 @@ public class SongViewController {
 				Alert dupAdd = new Alert(AlertType.ERROR);
 				dupAdd.setHeaderText(errMsg);
 				dupAdd.showAndWait();
+				clearText();
 			}//year isn't a positive integer
 			else if (!yearDet.getText().equals("") &&  (!isInteger(yearDet.getText()) || Integer.valueOf(yearDet.getText())<=0)) {
 				errMsg += yearDet.getText() + " is not a valid YEAR!";
 				Alert badYear = new Alert(AlertType.ERROR);
 				badYear.setHeaderText(errMsg);
 				badYear.showAndWait();
+				clearText();
 			}//add new song
 			else {
 				String item = nameDet.getText() + " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText();
@@ -200,10 +205,13 @@ public class SongViewController {
 	            fw.close();
 				
 			}
+		}else {
+			cancel();
 		}
 		cancelAdd.setVisible(false);
 		saveAdd.setVisible(false);
 		rTitle.setText("Song Details");
+		songDetailV2();
 	}
 	public void deleteSong(ActionEvent e) throws IOException {
 		if (listView.getSelectionModel().getSelectedItem() != null) {
@@ -245,10 +253,7 @@ public class SongViewController {
 				}
 				songDetailV2(); //displays details of the next song without the user having to interact
 			}else {
-				nameDet.clear();
-				artistDet.clear();
-				albumDet.clear();
-				yearDet.clear();
+				clearText();
 			}
 			
 		}else {
@@ -260,6 +265,9 @@ public class SongViewController {
 	}
 	public void editSong(ActionEvent e) {
 		//show relevant buttons
+		ogName = nameDet.getText();
+		ogArtist = artistDet.getText();
+		
 		nameDet.setEditable(true);
 		artistDet.setEditable(true);
 		albumDet.setEditable(true);
@@ -289,7 +297,7 @@ public class SongViewController {
 		listView.setFocusTraversable(true);
 		del.setDisable(false);
 		add.setDisable(false);
-		
+		boolean songNameArtEdited = !ogName.equals(nameDet.getText()) || !ogArtist.equals(artistDet.getText());
 		if (alert.getResult() == ButtonType.YES) {
 			
 			String errMsg = "";
@@ -299,6 +307,7 @@ public class SongViewController {
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
+				clearText();
 				
 			}//year isn't a positive integer
 			else if (!yearDet.getText().equals("") &&  (!isInteger(yearDet.getText()) || Integer.valueOf(yearDet.getText())<=0)) {
@@ -306,12 +315,14 @@ public class SongViewController {
 				Alert badYear = new Alert(AlertType.ERROR);
 				badYear.setHeaderText(errMsg);
 				badYear.showAndWait();
+				clearText();
 			}//check duplicates
-			else if (map.containsKey(nameDet.getText().trim() + "|" + artistDet.getText().trim())) {
+			else if (songNameArtEdited && map.containsKey(nameDet.getText().trim() + "|" + artistDet.getText().trim())) {
 				errMsg+= nameDet.getText() + " by " + artistDet.getText() + " is already in the library! ";
 				Alert dupAdd = new Alert(AlertType.ERROR);
 				dupAdd.setHeaderText(errMsg);
 				dupAdd.showAndWait();
+				clearText();
 			}//edit success
 			else {
 				list.clear();
@@ -353,9 +364,28 @@ public class SongViewController {
 			}
 			save.setVisible(false);
 			cancelEdit.setVisible(false);
+		}else {
+			cancel();
 		}
+		songDetailV2();
 	}
 	public void cancel(ActionEvent e) {
+		nameDet.setEditable(false);
+		artistDet.setEditable(false);
+		albumDet.setEditable(false);
+		yearDet.setEditable(false);
+		listView.setMouseTransparent(false);
+		listView.setFocusTraversable(true);
+		del.setDisable(false);
+		add.setDisable(false);
+		edit.setDisable(false);
+		cancelAdd.setVisible(false);
+		cancelEdit.setVisible(false);
+		saveAdd.setVisible(false);
+		save.setVisible(false);
+		songDetailV2();
+	}
+	public void cancel() { //override
 		nameDet.setEditable(false);
 		artistDet.setEditable(false);
 		albumDet.setEditable(false);
@@ -398,6 +428,12 @@ public class SongViewController {
 	    catch (Exception e){  
 	        return false; 
 	    } 
+	}
+	public void clearText() {
+		nameDet.clear();
+		artistDet.clear();
+		albumDet.clear();
+		yearDet.clear();
 	}
 	  
 }
