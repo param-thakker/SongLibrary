@@ -85,7 +85,7 @@ public class SongViewController {
 
 		listView.setItems(obsList); 
 
-		// select the first item if list aint empty
+		// select the first item
 		if (!list.isEmpty()) {
 			listView.getSelectionModel().select(0);
 			songDetailV2(); //displays song deets without user having to interact
@@ -265,21 +265,28 @@ public class SongViewController {
 
 		}
 	}
-	public void editSong(ActionEvent e) {
+	public void editSong(ActionEvent e) throws IOException {
 		//show relevant buttons
-		ogName = nameDet.getText();
-		ogArtist = artistDet.getText();
-		
-		nameDet.setEditable(true);
-		artistDet.setEditable(true);
-		albumDet.setEditable(true);
-		yearDet.setEditable(true);
-		save.setVisible(true);
-		listView.setMouseTransparent(true);
-		listView.setFocusTraversable(false);
-		del.setDisable(true);
-		add.setDisable(true);
-		cancelEdit.setVisible(true);
+		if (listView.getSelectionModel().getSelectedItem() != null) {
+			ogName = nameDet.getText();
+			ogArtist = artistDet.getText();
+			
+			nameDet.setEditable(true);
+			artistDet.setEditable(true);
+			albumDet.setEditable(true);
+			yearDet.setEditable(true);
+			save.setVisible(true);
+			listView.setMouseTransparent(true);
+			listView.setFocusTraversable(false);
+			del.setDisable(true);
+			add.setDisable(true);
+			cancelEdit.setVisible(true);
+		}else {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setHeaderText("No selected item to edit!");
+			alert.showAndWait();
+
+		}
 	}
 	public void saveSong(ActionEvent e) throws IOException {
 		String[] song=listView.getSelectionModel().getSelectedItem().split("\\|",2);
