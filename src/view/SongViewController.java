@@ -85,10 +85,11 @@ public class SongViewController {
 
 		listView.setItems(obsList); 
 
-		// select the first item
-		listView.getSelectionModel().select(0);
-		songDetailV2(); //displays song deets without user having to interact
-
+		// select the first item if list aint empty
+		if (!list.isEmpty()) {
+			listView.getSelectionModel().select(0);
+			songDetailV2(); //displays song deets without user having to interact
+		}
 		// set listener for the items
 		listView
 		.getSelectionModel()
@@ -156,6 +157,7 @@ public class SongViewController {
 															ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 		alert.showAndWait();
 		//show the relevant buttons
+		int index = listView.getSelectionModel().getSelectedIndex();
 		nameDet.setEditable(false);
 		artistDet.setEditable(false);
 		albumDet.setEditable(false);
@@ -205,13 +207,13 @@ public class SongViewController {
 	            fw.close();
 				
 			}
+			cancelAdd.setVisible(false);
+			saveAdd.setVisible(false);
 		}else {
 			cancel();
 		}
-		cancelAdd.setVisible(false);
-		saveAdd.setVisible(false);
 		rTitle.setText("Song Details");
-		songDetailV2();
+		listView.getSelectionModel().select(index);
 	}
 	public void deleteSong(ActionEvent e) throws IOException {
 		if (listView.getSelectionModel().getSelectedItem() != null) {
