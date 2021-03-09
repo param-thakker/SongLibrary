@@ -1,2 +1,2 @@
-NAMES: Param Thakker(pkt15), Jonathan Lu (jnl76)
+NAMES: Param Thakker, Jonathan Lu
 
