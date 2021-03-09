@@ -1,4 +1,3 @@
-//NAMES: Param Thakker(pkt15), Jonathan Lu (jnl76)
 package view;
 import java.io.File;
 import java.io.FileWriter;
