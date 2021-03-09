@@ -64,10 +64,12 @@ public class SongViewController {
 		
 		File file = new File("songs.txt"); 
 		Scanner sc = new Scanner(file); 
+		sc.nextLine();
 		    if (!sc.hasNextLine()) {
-		    	System.out.println("Empty file");
-		    	return;
+		    	System.out.println("No songs in the library currently");
 		    }
+		    else {
+		    
 		    while (sc.hasNextLine()) { 
 		    	String item=sc.nextLine().trim();
 		    	if (item.equals("")) {
@@ -76,6 +78,7 @@ public class SongViewController {
 		    	String[] content=item.split("\\|",4);
 		        list.add(content[0].trim()+ "|" + content[1].trim());
 		        map.put(content[0].trim()+ "|" + content[1].trim(), new ArrayList<>(Arrays.asList(content[2].trim(),content[3].trim())));
+		    }
 		    }
 		  
 		
@@ -157,7 +160,7 @@ public class SongViewController {
 															ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 		alert.showAndWait();
 		//show the relevant buttons
-		int index = listView.getSelectionModel().getSelectedIndex();
+		//int index = listView.getSelectionModel().getSelectedIndex();
 		nameDet.setEditable(false);
 		artistDet.setEditable(false);
 		albumDet.setEditable(false);
@@ -167,6 +170,7 @@ public class SongViewController {
 		del.setDisable(false);
 		edit.setDisable(false);
 		
+		String newItem="";
 		
 		//add new song using same implementation as beginning
 		if (alert.getResult() == ButtonType.YES) {
@@ -178,6 +182,12 @@ public class SongViewController {
 				Alert badAdd = new Alert(AlertType.ERROR);
 				badAdd.setHeaderText(errMsg);
 				badAdd.showAndWait();
+				saveAdd.setVisible(false);
+				cancelAdd.setVisible(false);
+				if (!list.isEmpty()) {
+					rTitle.setText("Song Details");
+					songDetailV2();
+				}
 			}//check duplicates
 			else if (map.containsKey(nameDet.getText().trim() + "|" + artistDet.getText().trim())) {
 				errMsg+= nameDet.getText() + " by " + artistDet.getText() + " is already in the library! ";
@@ -185,6 +195,12 @@ public class SongViewController {
 				dupAdd.setHeaderText(errMsg);
 				dupAdd.showAndWait();
 				clearText();
+				saveAdd.setVisible(false);
+				cancelAdd.setVisible(false);
+				if (!list.isEmpty()) {
+					rTitle.setText("Song Details");
+					songDetailV2();
+				}
 			}//year isn't a positive integer
 			else if (!yearDet.getText().equals("") &&  (!isInteger(yearDet.getText()) || Integer.valueOf(yearDet.getText())<=0)) {
 				errMsg += yearDet.getText() + " is not a valid YEAR!";
@@ -192,11 +208,20 @@ public class SongViewController {
 				badYear.setHeaderText(errMsg);
 				badYear.showAndWait();
 				clearText();
+				saveAdd.setVisible(false);
+				cancelAdd.setVisible(false);
+				if (!list.isEmpty()) {
+					rTitle.setText("Song Details");
+					songDetailV2();
+				}
 			}//add new song
 			else {
 				String item = nameDet.getText() + " | " + artistDet.getText() + " | " + albumDet.getText() + " | " + yearDet.getText();
+				
+				
 		    	String[] content=item.split("\\|",4);
 		        list.add(content[0].trim()+ "|" + content[1].trim());
+		        newItem=content[0].trim()+ "|" + content[1].trim();
 		        map.put(content[0].trim()+ "|" + content[1].trim(), new ArrayList<>(Arrays.asList(content[2].trim(),content[3].trim())));
 		        
 		        Collections.sort(list, new sortSongs());
@@ -205,15 +230,18 @@ public class SongViewController {
 				FileWriter fw = new FileWriter("songs.txt", true);
 	            fw.write("\n" + item);
 	            fw.close();
+	    		cancelAdd.setVisible(false);
+				saveAdd.setVisible(false);
+				rTitle.setText("Song Details");		
+				int index=list.indexOf(newItem);
+				listView.getSelectionModel().select(index);
+				songDetailV2();
 				
 			}
-			cancelAdd.setVisible(false);
-			saveAdd.setVisible(false);
 		}else {
 			cancel();
 		}
-		rTitle.setText("Song Details");
-		listView.getSelectionModel().select(index);
+
 	}
 	public void deleteSong(ActionEvent e) throws IOException {
 		if (listView.getSelectionModel().getSelectedItem() != null) {
@@ -222,7 +250,7 @@ public class SongViewController {
 			alert.showAndWait();
 			File file = new File("songs.txt"); 
 			Scanner sc = new Scanner(file); 
-			String contentOfFile="";
+			String contentOfFile=sc.nextLine() + "\n";
 
 			int currIndex = listView.getSelectionModel().getSelectedIndex();
 			if (alert.getResult() == ButtonType.YES) {
@@ -341,7 +369,7 @@ public class SongViewController {
 				obsList.set(index, nameDet.getText()+"|" + artistDet.getText());
 				File file = new File("songs.txt"); 
 				Scanner sc = new Scanner(file); 
-				String contentOfFile="";
+				String contentOfFile=sc.nextLine() + "\n";
 					while (sc.hasNextLine()) {
 				    	String original=sc.nextLine();
 				    	String item=original.trim();
@@ -376,7 +404,9 @@ public class SongViewController {
 		}else {
 			cancel();
 		}
+	if (!list.isEmpty()) {
 		songDetailV2();
+		}
 	}
 	public void cancel(ActionEvent e) {
 		nameDet.setEditable(false);
@@ -392,7 +422,9 @@ public class SongViewController {
 		cancelEdit.setVisible(false);
 		saveAdd.setVisible(false);
 		save.setVisible(false);
+		if (!list.isEmpty()) {
 		songDetailV2();
+		}
 	}
 	public void cancel() { //override
 		nameDet.setEditable(false);
@@ -408,7 +440,9 @@ public class SongViewController {
 		cancelEdit.setVisible(false);
 		saveAdd.setVisible(false);
 		save.setVisible(false);
+		if (!list.isEmpty()) {
 		songDetailV2();
+		}
 	}
 	
 	
